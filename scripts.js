@@ -22,6 +22,8 @@ function onSignIn(googleUser) {
   $.post(url, data, function () {
     $("#username").html(profile.getName());
     $("#wrapper").css("display","none");
+    $(".inputdiv").css("display","table");
+    $(".profile-pic").css("display","block");
     $(".profile-pic").css("background-image",'url('+profile.getImageUrl()+')');
     showQuestion(profile.getId());
   });
@@ -100,7 +102,7 @@ function checkAnswer() {
 
           var userAnswer = $("#answer").val();
 
-          if (userAnswer == correctAnswer) {
+          if (userAnswer.toLowerCase() == correctAnswer.toLowerCase()) {
             
             if (tries >= 20) {
               totalPoints = Number(totalPoints) + 10;
@@ -142,8 +144,8 @@ function checkAnswer() {
             };
             $.post(url, data, function () {
               showQuestion(currentUserId)
-              showStatus("Answer Is Wrong please try again");
-              console.log("Amswer Is Wrong please try again");
+              showStatus("Answer Was Wrong please try again");
+              console.log("Amswer Was Wrong please try again");
             });
 
           }
@@ -159,12 +161,17 @@ function showStatus(status) {
 
 }
 function signOut() {
+
+  
   var auth2 = gapi.auth2.getAuthInstance();
   auth2.signOut().then(function () {
     console.log('User signed out.');
   });
-  $("#username").html("");
-  $("#user_image").attr("src", "");
+  // $("#username").html("");
+  // $("#user_image").attr("src", "");
+  $("#wrapper").css("display","table");
+  $(".inputdiv").css("display","none");
+  $(".profile-pic").css("display","none");
 }
 
 
@@ -220,6 +227,11 @@ function renderButton() {
   });
 }
 var i=0;
+$(".home").click(function(){
+  $(".leaderboard").toggle("slow")
+
+});
+$(".logout").click(signOut);
 $(".top-scores").click(function(){
   var leaderboard = "";
   $(".leaderboard").toggle("slow")
