@@ -3,14 +3,21 @@ const url = "https://script.google.com/macros/s/AKfycbzZjXP4huhmi7PnrRM3nzhl9ytZ
 var currentUserId
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
-  console.log('ID: ' + typeof (profile.getId())); // Do not send to your backend! Use an ID token instead.
-  console.log('Name: ' + typeof (profile.getName()));
-  console.log('Image URL: ' + typeof (profile.getImageUrl()));
-  console.log('Email: ' + typeof (profile.getEmail())); // This is null if the 'email' scope is not present.
+  var teamName = $("#teamName").val();
+  console.log(teamName)
+  if(teamName == ""){
+    user_name = profile.getName();
+  }else{
+    user_name = teamName;
+  }
+  // console.log('ID: ' + typeof (profile.getId())); // Do not send to your backend! Use an ID token instead.
+  // console.log('Name: ' + typeof (profile.getName()));
+  // console.log('Image URL: ' + typeof (profile.getImageUrl()));
+  // console.log('Email: ' + typeof (profile.getEmail())); // This is null if the 'email' scope is not present.
   currentUserId = profile.getId()
   const data = {
     "id": "users",
-    "User Name": profile.getName(),
+    "User Name": user_name,
     "User ID": profile.getId(),
     "Email": profile.getEmail(),
     "Image URL": profile.getImageUrl(),
@@ -23,8 +30,10 @@ function onSignIn(googleUser) {
     $("#username").html(profile.getName());
     $("#wrapper").css("display","none");
     $(".inputdiv").css("display","table");
+    $("#user_name").css("display","block");
     $(".profile-pic").css("display","block");
     $(".profile-pic").css("background-image",'url('+profile.getImageUrl()+')');
+    $("#user_name").html(user_name);
     showQuestion(profile.getId());
   });
 
@@ -154,8 +163,8 @@ function checkAnswer() {
 }
 function showStatus(status) {
   $("#status").html(status)
-  $("#status").fadeIn(5000, function () {
-    $("#status").fadeOut(5000)
+  $("#status").fadeIn(500, function () {
+    $("#status").fadeOut(1000)
   });
 
 
@@ -169,9 +178,11 @@ function signOut() {
   });
   // $("#username").html("");
   // $("#user_image").attr("src", "");
+  $("#user_name").css("display","none");
   $("#wrapper").css("display","table");
   $(".inputdiv").css("display","none");
   $(".profile-pic").css("display","none");
+  $("#teamName").css("display","block");
 }
 
 
@@ -243,3 +254,12 @@ $(".top-scores").click(function(){
     
   });
 });
+
+$(document).bind("contextmenu",function(e) {
+  e.preventDefault();
+ });
+ $(document).keydown(function(e){
+     if(e.which === 123){
+        return false;
+     }
+ });
